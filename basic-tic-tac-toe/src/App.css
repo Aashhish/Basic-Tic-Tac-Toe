@@ -5,12 +5,17 @@ html, body {
 }
 
 body {
-  filter: sepia(0.4) contrast(1.05) brightness(0.95);
-  font-family: Arial, sans-serif;
+   background-image: 
+        radial-gradient(circle at center, rgba(0, 0, 0, 0) 50%, rgb(21, 8, 0) 100%),
+        url('./assets/squiggles_and_doodles_background.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    filter: sepia(0.4) contrast(1.05) brightness(0.95);
 }
 
 .Navbar{
-  background-color: burlywood;
+  background-color: rgb(113, 110, 105);
   height: 10vh;
 }
 
