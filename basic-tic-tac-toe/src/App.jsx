@@ -1,35 +1,81 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import "./App.css";
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  const [board, setBoard] = useState(Array(9).fill(null));
+  const [xIsNext, setXIsNext] = useState(true);
+
+  const winnerData = calculateWinner(board);
+  const winner = winnerData?.player;
+
+  const handleClick = (index) => {
+    if (board[index] || winner) return;
+    const newBoard = [...board];
+    newBoard[index] = xIsNext ? "X" : "O";
+    setBoard(newBoard);
+    setXIsNext(!xIsNext);
+  };
+
+  const status = winner
+    ? `Winner: ${winner}`
+    : board.every(Boolean)
+    ? "Draw"
+    : `Next player: ${xIsNext ? "X" : "O"}`;
+
+  const resetGame = () => {
+    setBoard(Array(9).fill(null));
+    setXIsNext(true);
+  };
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div className="Navbar">
+        <span className="title">Tic Tac Toe</span>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+      <div className="game-container">
+        <div className="board" role="grid">
+          {board.map((cell, index) => (
+            <button
+              key={index}
+              className={`square ${
+                winnerData?.line.includes(index) ? "highlight" : ""
+              }`}
+              onClick={() => handleClick(index)}
+              aria-label={`Square ${index + 1}, ${cell || "empty"}`}
+              tabIndex={0}
+            >
+              {cell}
+            </button>
+          ))}
+        </div>
+        <div className="status" aria-live="polite">
+          {status}
+        </div>
+        <button className="restart-button" onClick={resetGame}>
+          Restart
         </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
-  )
+  );
+};
+
+function calculateWinner(squares) {
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+  for (let [a, b, c] of lines) {
+    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+      return { player: squares[a], line: [a, b, c] };
+    }
+  }
+  return null;
 }
 
-export default App
+export default App;
